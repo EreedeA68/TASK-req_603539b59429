@@ -4,8 +4,13 @@
 
 'use strict';
 
-// Provide crypto stubs before the module is loaded.
-// jsdom may not expose crypto.subtle in all versions.
+// Provide Web API stubs before the module is loaded.
+// jsdom may not expose TextEncoder or crypto.subtle in all versions.
+if (!global.TextEncoder) {
+    const { TextEncoder, TextDecoder } = require('util');
+    global.TextEncoder = TextEncoder;
+    global.TextDecoder = TextDecoder;
+}
 if (!global.crypto) {
     global.crypto = {};
 }

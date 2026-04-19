@@ -30,7 +30,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Base64;
-import java.util.Set;
 
 @Slf4j
 @Component
@@ -45,18 +44,10 @@ public class RequestSigningFilter extends OncePerRequestFilter {
     @Value("${app.request-signing.secret:${app.jwt.secret}}")
     private String signingSecret;
 
-    private static final Set<String> EXCLUDED_PATHS = Set.of(
-            "/actuator/health", "/actuator/info",
-            "/", "/login", "/home", "/products", "/cart", "/checkout",
-            "/confirmation", "/orders", "/notifications", "/favorites",
-            "/staff", "/admin", "/css", "/js", "/images", "/error"
-    );
-
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
-        return EXCLUDED_PATHS.stream().anyMatch(path::startsWith)
-                || !path.startsWith("/api/");
+        // Only sign /api/ endpoints; all page routes and actuator paths are excluded.
+        return !request.getRequestURI().startsWith("/api/");
     }
 
     @Override
@@ -159,7 +150,8 @@ public class RequestSigningFilter extends OncePerRequestFilter {
     private String computeHmac(String canonical, String key) {
         try {
             Mac mac = Mac.getInstance("HmacSHA256");
-            mac.init(new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+            byte[] keyBytes = key.isEmpty() ? new byte[]{0} : key.getBytes(StandardCharsets.UTF_8);
+            mac.init(new SecretKeySpec(keyBytes, "HmacSHA256"));
             return Base64.getEncoder().encodeToString(mac.doFinal(canonical.getBytes(StandardCharsets.UTF_8)));
         } catch (Exception e) {
             throw new RuntimeException("HMAC computation failed", e);

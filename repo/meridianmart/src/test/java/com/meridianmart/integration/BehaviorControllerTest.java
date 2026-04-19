@@ -37,14 +37,14 @@ class BehaviorControllerTest extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(Map.of("productId", productId, "eventType", "VIEW")))))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value("Event recorded"));
+                .andExpect(jsonPath("$.message").value("Event recorded"));
     }
 
     @Test
     void recordBehaviorEventUnauthenticatedReturns401() throws Exception {
-        mockMvc.perform(post("/api/behavior")
+        mockMvc.perform(withNoAuthSigning(post("/api/behavior")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(Map.of("productId", productId, "eventType", "VIEW"))))
+                        .content(toJson(Map.of("productId", productId, "eventType", "VIEW")))))
                 .andExpect(status().isUnauthorized());
     }
 

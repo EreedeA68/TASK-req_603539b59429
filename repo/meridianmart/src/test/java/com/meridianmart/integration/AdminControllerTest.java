@@ -35,7 +35,7 @@ class AdminControllerTest extends BaseIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data[0].flagName").isString())
-                .andExpect(jsonPath("$.data[0].isEnabled").isBoolean());
+                .andExpect(jsonPath("$.data[0].enabled").isBoolean());
     }
 
     @Test
@@ -44,7 +44,7 @@ class AdminControllerTest extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(toJson(Map.of("isEnabled", false)))))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.isEnabled").value(false));
+                .andExpect(jsonPath("$.data.enabled").value(false));
     }
 
     @Test

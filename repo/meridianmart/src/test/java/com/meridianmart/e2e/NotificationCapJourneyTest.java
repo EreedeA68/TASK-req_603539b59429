@@ -20,8 +20,7 @@ class NotificationCapJourneyTest extends BaseSeleniumTest {
 
     @BeforeEach
     void setUp() {
-        notificationRepository.deleteAll();
-        userRepository.deleteAll();
+        cleanDatabase();
 
         userRepository.save(User.builder()
                 .username("capjourney").email("cap@test.com")

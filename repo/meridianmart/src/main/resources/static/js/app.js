@@ -18,8 +18,11 @@ const API = {
         const bodyHash = await this.computeBodyHash(bodyStr);
         const canonical = `${method.toUpperCase()}\n${path}\n${timestamp}\n${nonce}\n${bodyHash}`;
         const encoder = new TextEncoder();
+        const rawKey = encoder.encode(signingKey);
+        // crypto.subtle requires at least 1 byte; use a null byte for unauthenticated requests
+        const keyMaterial = rawKey.length > 0 ? rawKey : new Uint8Array([0]);
         const key = await crypto.subtle.importKey(
-            'raw', encoder.encode(signingKey),
+            'raw', keyMaterial,
             { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']
         );
         const sig = await crypto.subtle.sign('HMAC', key, encoder.encode(canonical));

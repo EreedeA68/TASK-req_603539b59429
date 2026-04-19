@@ -72,13 +72,13 @@ class RecommendationServiceTest {
         User user = buildUser(1L);
         when(featureFlagRepository.findByFlagNameAndStoreId("RECOMMENDATIONS_ENABLED", STORE))
                 .thenReturn(Optional.of(FeatureFlag.builder().id(1L).flagName("RECOMMENDATIONS_ENABLED").enabled(true).build()));
-        when(recommendationRepository.findFreshByUserId(eq(1L), any())).thenReturn(List.of());
+        when(recommendationRepository.findFreshByUserId(eq(1L), any())).thenReturn(new ArrayList<>());
         when(behaviorEventRepository.countByUserId(1L)).thenReturn(1L);
         when(behaviorEventRepository.findProductIdsByUserId(1L)).thenReturn(new ArrayList<>());
         when(behaviorEventRepository.findProductPopularitySinceByStoreId(any(), eq(STORE))).thenReturn(
-                List.of(new Object[]{1L, 10L}, new Object[]{2L, 8L}));
-        when(productRepository.findByIdInAndStoreId(any(), eq(STORE))).thenReturn(List.of(buildProduct(1L), buildProduct(2L)));
-        when(productRepository.findNewArrivalsByStoreId(eq(STORE), any())).thenReturn(List.of(buildProduct(3L)));
+                new ArrayList<>(List.of(new Object[]{1L, 10L}, new Object[]{2L, 8L})));
+        when(productRepository.findByIdInAndStoreId(any(), eq(STORE))).thenReturn(new ArrayList<>(List.of(buildProduct(1L), buildProduct(2L))));
+        when(productRepository.findNewArrivalsByStoreId(eq(STORE), any())).thenReturn(new ArrayList<>(List.of(buildProduct(3L))));
         doNothing().when(recommendationRepository).deleteByUserId(1L);
         when(recommendationRepository.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
         when(productService.toDto(any())).thenAnswer(inv -> {
@@ -96,12 +96,12 @@ class RecommendationServiceTest {
         User user = buildUser(1L);
         when(featureFlagRepository.findByFlagNameAndStoreId("RECOMMENDATIONS_ENABLED", STORE))
                 .thenReturn(Optional.of(FeatureFlag.builder().id(1L).enabled(true).build()));
-        when(recommendationRepository.findFreshByUserId(eq(1L), any())).thenReturn(List.of());
+        when(recommendationRepository.findFreshByUserId(eq(1L), any())).thenReturn(new ArrayList<>());
         when(behaviorEventRepository.countByUserId(1L)).thenReturn(0L);
         when(behaviorEventRepository.findProductIdsByUserId(1L)).thenReturn(new ArrayList<>());
-        when(behaviorEventRepository.findProductPopularitySinceByStoreId(any(), eq(STORE))).thenReturn(List.of());
-        when(productRepository.findByIdInAndStoreId(any(), eq(STORE))).thenReturn(List.of());
-        when(productRepository.findNewArrivalsByStoreId(eq(STORE), any())).thenReturn(List.of(buildProduct(100L)));
+        when(behaviorEventRepository.findProductPopularitySinceByStoreId(any(), eq(STORE))).thenReturn(new ArrayList<>());
+        when(productRepository.findByIdInAndStoreId(any(), eq(STORE))).thenReturn(new ArrayList<>());
+        when(productRepository.findNewArrivalsByStoreId(eq(STORE), any())).thenReturn(new ArrayList<>(List.of(buildProduct(100L))));
         doNothing().when(recommendationRepository).deleteByUserId(1L);
         when(recommendationRepository.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
         when(productService.toDto(any())).thenAnswer(inv -> {
@@ -123,7 +123,7 @@ class RecommendationServiceTest {
 
         when(featureFlagRepository.findByFlagNameAndStoreId("RECOMMENDATIONS_ENABLED", STORE))
                 .thenReturn(Optional.of(FeatureFlag.builder().id(1L).enabled(true).build()));
-        when(recommendationRepository.findFreshByUserId(eq(1L), any())).thenReturn(List.of(rec));
+        when(recommendationRepository.findFreshByUserId(eq(1L), any())).thenReturn(new ArrayList<>(List.of(rec)));
         when(productService.toDto(any())).thenAnswer(inv -> {
             Product p = inv.getArgument(0);
             return ProductDto.builder().id(p.getId()).name(p.getName()).build();
@@ -140,24 +140,24 @@ class RecommendationServiceTest {
         User user = buildUser(1L);
         when(featureFlagRepository.findByFlagNameAndStoreId("RECOMMENDATIONS_ENABLED", STORE))
                 .thenReturn(Optional.of(FeatureFlag.builder().id(1L).enabled(true).build()));
-        when(recommendationRepository.findFreshByUserId(eq(1L), any())).thenReturn(List.of());
+        when(recommendationRepository.findFreshByUserId(eq(1L), any())).thenReturn(new ArrayList<>());
         when(behaviorEventRepository.countByUserId(1L)).thenReturn(5L);
 
         // Only 2 shared interactions per user pair — below threshold of 3
         when(behaviorEventRepository.findAllUserProductInteractionCountsByStoreId(eq(STORE))).thenReturn(
-                List.of(
+                new ArrayList<>(List.of(
                         new Object[]{1L, 10L, 5L},
                         new Object[]{1L, 11L, 3L},
                         new Object[]{1L, 12L, 2L},
                         new Object[]{2L, 10L, 4L},
                         new Object[]{2L, 11L, 2L}  // only 2 shared with user 1
-                )
+                ))
         );
-        when(behaviorEventRepository.findProductIdsByUserId(1L)).thenReturn(List.of(10L, 11L, 12L));
+        when(behaviorEventRepository.findProductIdsByUserId(1L)).thenReturn(new ArrayList<>(List.of(10L, 11L, 12L)));
         // Falls back to cold start
-        when(behaviorEventRepository.findProductPopularitySinceByStoreId(any(), eq(STORE))).thenReturn(List.of());
-        when(productRepository.findByIdInAndStoreId(any(), eq(STORE))).thenReturn(List.of());
-        when(productRepository.findNewArrivalsByStoreId(eq(STORE), any())).thenReturn(List.of(buildProduct(99L)));
+        when(behaviorEventRepository.findProductPopularitySinceByStoreId(any(), eq(STORE))).thenReturn(new ArrayList<>());
+        when(productRepository.findByIdInAndStoreId(any(), eq(STORE))).thenReturn(new ArrayList<>());
+        when(productRepository.findNewArrivalsByStoreId(eq(STORE), any())).thenReturn(new ArrayList<>(List.of(buildProduct(99L))));
         doNothing().when(recommendationRepository).deleteByUserId(1L);
         when(recommendationRepository.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
         when(productService.toDto(any())).thenAnswer(inv -> {

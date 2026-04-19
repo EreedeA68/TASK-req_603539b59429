@@ -76,7 +76,7 @@ class AuthControllerTest extends BaseIntegrationTest {
 
     @Test
     void getMeWithoutTokenReturns401() throws Exception {
-        mockMvc.perform(get("/api/auth/me").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(withNoAuthSigning(get("/api/auth/me").contentType(MediaType.APPLICATION_JSON)))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -90,8 +90,8 @@ class AuthControllerTest extends BaseIntegrationTest {
 
     @Test
     void logoutWithoutTokenReturns401() throws Exception {
-        mockMvc.perform(post("/api/auth/logout")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(withNoAuthSigning(post("/api/auth/logout")
+                        .contentType(MediaType.APPLICATION_JSON)))
                 .andExpect(status().isUnauthorized());
     }
 }

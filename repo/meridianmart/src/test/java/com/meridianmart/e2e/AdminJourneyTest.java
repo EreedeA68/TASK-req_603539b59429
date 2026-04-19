@@ -23,8 +23,7 @@ class AdminJourneyTest extends BaseSeleniumTest {
 
     @BeforeEach
     void setUp() {
-        featureFlagRepository.deleteAll();
-        userRepository.deleteAll();
+        cleanDatabase();
 
         userRepository.save(User.builder()
                 .username("adminjourney").email("adminjourney@test.com")

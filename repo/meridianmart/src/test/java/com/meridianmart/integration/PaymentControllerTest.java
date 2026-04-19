@@ -130,11 +130,11 @@ class PaymentControllerTest extends BaseIntegrationTest {
                 .andReturn().getResponse().getContentAsString();
 
         // Second request with same key returns same transaction
+        int firstTxnId = ((Number) com.jayway.jsonpath.JsonPath.read(firstResponse, "$.data.transactionId")).intValue();
         mockMvc.perform(withStaffAuth(post("/api/payments/deposit")
                         .contentType(MediaType.APPLICATION_JSON).content(body)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.transactionId")
-                        .value(com.jayway.jsonpath.JsonPath.read(firstResponse, "$.data.transactionId")));
+                .andExpect(jsonPath("$.data.transactionId").value(firstTxnId));
     }
 
     @Test

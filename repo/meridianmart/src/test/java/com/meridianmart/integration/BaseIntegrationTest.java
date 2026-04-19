@@ -185,7 +185,8 @@ public abstract class BaseIntegrationTest {
     private String computeHmac(String canonical, String key) {
         try {
             Mac mac = Mac.getInstance("HmacSHA256");
-            mac.init(new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+            byte[] keyBytes = key.isEmpty() ? new byte[]{0} : key.getBytes(StandardCharsets.UTF_8);
+            mac.init(new SecretKeySpec(keyBytes, "HmacSHA256"));
             return Base64.getEncoder().encodeToString(mac.doFinal(canonical.getBytes(StandardCharsets.UTF_8)));
         } catch (Exception e) {
             throw new RuntimeException("HMAC computation failed", e);

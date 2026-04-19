@@ -48,9 +48,9 @@ class CartControllerTest extends BaseIntegrationTest {
 
     @Test
     void addToCartUnauthenticatedReturns401() throws Exception {
-        mockMvc.perform(post("/api/cart")
+        mockMvc.perform(withNoAuthSigning(post("/api/cart")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(Map.of("productId", productId, "quantity", 1))))
+                        .content(toJson(Map.of("productId", productId, "quantity", 1)))))
                 .andExpect(status().isUnauthorized());
     }
 

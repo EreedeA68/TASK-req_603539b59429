@@ -46,9 +46,9 @@ class FavoriteControllerTest extends BaseIntegrationTest {
 
     @Test
     void addFavoriteUnauthenticatedReturns401() throws Exception {
-        mockMvc.perform(post("/api/favorites")
+        mockMvc.perform(withNoAuthSigning(post("/api/favorites")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(toJson(Map.of("productId", productId))))
+                        .content(toJson(Map.of("productId", productId)))))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -82,7 +82,7 @@ class FavoriteControllerTest extends BaseIntegrationTest {
 
     @Test
     void getFavoritesUnauthenticatedReturns401() throws Exception {
-        mockMvc.perform(get("/api/favorites"))
+        mockMvc.perform(withNoAuthSigning(get("/api/favorites")))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -111,7 +111,7 @@ class FavoriteControllerTest extends BaseIntegrationTest {
 
     @Test
     void removeFavoriteUnauthenticatedReturns401() throws Exception {
-        mockMvc.perform(delete("/api/favorites/1"))
+        mockMvc.perform(withNoAuthSigning(delete("/api/favorites/1")))
                 .andExpect(status().isUnauthorized());
     }
 }

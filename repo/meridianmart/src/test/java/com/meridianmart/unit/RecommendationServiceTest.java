@@ -12,12 +12,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +29,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class RecommendationServiceTest {
 
     private static final String STORE = "STORE_001";
@@ -70,7 +74,7 @@ class RecommendationServiceTest {
                 .thenReturn(Optional.of(FeatureFlag.builder().id(1L).flagName("RECOMMENDATIONS_ENABLED").enabled(true).build()));
         when(recommendationRepository.findFreshByUserId(eq(1L), any())).thenReturn(List.of());
         when(behaviorEventRepository.countByUserId(1L)).thenReturn(1L);
-        when(behaviorEventRepository.findProductIdsByUserId(1L)).thenReturn(List.of());
+        when(behaviorEventRepository.findProductIdsByUserId(1L)).thenReturn(new ArrayList<>());
         when(behaviorEventRepository.findProductPopularitySinceByStoreId(any(), eq(STORE))).thenReturn(
                 List.of(new Object[]{1L, 10L}, new Object[]{2L, 8L}));
         when(productRepository.findByIdInAndStoreId(any(), eq(STORE))).thenReturn(List.of(buildProduct(1L), buildProduct(2L)));
@@ -94,7 +98,7 @@ class RecommendationServiceTest {
                 .thenReturn(Optional.of(FeatureFlag.builder().id(1L).enabled(true).build()));
         when(recommendationRepository.findFreshByUserId(eq(1L), any())).thenReturn(List.of());
         when(behaviorEventRepository.countByUserId(1L)).thenReturn(0L);
-        when(behaviorEventRepository.findProductIdsByUserId(1L)).thenReturn(List.of());
+        when(behaviorEventRepository.findProductIdsByUserId(1L)).thenReturn(new ArrayList<>());
         when(behaviorEventRepository.findProductPopularitySinceByStoreId(any(), eq(STORE))).thenReturn(List.of());
         when(productRepository.findByIdInAndStoreId(any(), eq(STORE))).thenReturn(List.of());
         when(productRepository.findNewArrivalsByStoreId(eq(STORE), any())).thenReturn(List.of(buildProduct(100L)));

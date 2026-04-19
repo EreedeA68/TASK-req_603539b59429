@@ -6,6 +6,7 @@ import com.meridianmart.dto.CartResponse;
 import com.meridianmart.model.CartItem;
 import com.meridianmart.model.Product;
 import com.meridianmart.model.User;
+import com.meridianmart.repository.BehaviorEventRepository;
 import com.meridianmart.repository.CartItemRepository;
 import com.meridianmart.repository.ProductRepository;
 import com.meridianmart.service.CartService;
@@ -29,6 +30,7 @@ class CartServiceTest {
 
     @Mock CartItemRepository cartItemRepository;
     @Mock ProductRepository productRepository;
+    @Mock BehaviorEventRepository behaviorEventRepository;
     @InjectMocks CartService cartService;
 
     private User buildUser() {

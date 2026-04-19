@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +35,7 @@ public abstract class BaseIntegrationTest {
     @Autowired protected UserRepository userRepository;
     @Autowired protected PasswordEncoder passwordEncoder;
     @Autowired protected JwtTokenProvider tokenProvider;
+    @Autowired private JdbcTemplate jdbcTemplate;
 
     @Value("${app.request-signing.secret}")
     private String signingSecret;
@@ -48,9 +50,22 @@ public abstract class BaseIntegrationTest {
     protected String shopperStore2Token;
     protected Long shopperStore2Id;
 
+    private void cleanDatabase() {
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        for (String t : new String[]{
+                "behavior_events", "recommendations", "cart_items", "favorites",
+                "order_items", "orders", "payment_transactions", "disputes",
+                "notifications", "ratings", "revoked_tokens", "nonce_store",
+                "change_history", "audit_logs", "feature_flags", "app_config",
+                "distributed_locks", "products", "users"}) {
+            jdbcTemplate.execute("DELETE FROM " + t);
+        }
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
+    }
+
     @BeforeEach
     void setUpUsers() {
-        userRepository.deleteAll();
+        cleanDatabase();
 
         User admin = User.builder()
                 .username("admin_test").email("admin@test.com")

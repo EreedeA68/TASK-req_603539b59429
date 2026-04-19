@@ -63,8 +63,9 @@ class NotificationServiceTest {
 
         assertThatThrownBy(() -> notificationService.createNotification(1L, "6th message"))
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("statusCode")
-                .satisfies(code -> assertThat(code.value()).isEqualTo(429));
+                .satisfies(ex -> assertThat(
+                        ((org.springframework.web.server.ResponseStatusException) ex).getStatusCode().value()
+                ).isEqualTo(429));
     }
 
     @Test

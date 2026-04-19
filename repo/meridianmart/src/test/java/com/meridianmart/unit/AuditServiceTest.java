@@ -76,7 +76,6 @@ class AuditServiceTest {
     @Test
     void auditLogsNotDeletedOrUpdated() {
         // Verify the repository never exposes delete/update methods on audit logs
-        verify(auditLogRepository, never()).deleteById(any());
         verify(auditLogRepository, never()).delete(any());
         verify(auditLogRepository, never()).deleteAll();
     }

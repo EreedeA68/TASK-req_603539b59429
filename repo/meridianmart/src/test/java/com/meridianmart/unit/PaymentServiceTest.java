@@ -160,8 +160,9 @@ class PaymentServiceTest {
 
         assertThatThrownBy(() -> paymentService.recordPayment(order, BigDecimal.valueOf(100), "cross-order-key"))
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("statusCode")
-                .satisfies(code -> assertThat(code.value()).isEqualTo(409));
+                .satisfies(ex -> assertThat(
+                        ((org.springframework.web.server.ResponseStatusException) ex).getStatusCode().value()
+                ).isEqualTo(409));
     }
 
     @Test

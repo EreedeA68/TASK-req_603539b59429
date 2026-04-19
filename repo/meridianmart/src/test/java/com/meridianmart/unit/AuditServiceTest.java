@@ -74,9 +74,12 @@ class AuditServiceTest {
     }
 
     @Test
-    void auditLogsNotDeletedOrUpdated() {
-        // Verify the repository never exposes delete/update methods on audit logs
-        verify(auditLogRepository, never()).delete(any());
-        verify(auditLogRepository, never()).deleteAll();
+    void auditLogRepositoryExposesNoDeleteMethods() {
+        // AuditLogRepository extends bare Repository (not CrudRepository) to enforce
+        // immutability — verify no delete method is declared on the interface.
+        java.lang.reflect.Method[] methods = AuditLogRepository.class.getDeclaredMethods();
+        for (java.lang.reflect.Method method : methods) {
+            assertThat(method.getName()).doesNotContainIgnoringCase("delete");
+        }
     }
 }

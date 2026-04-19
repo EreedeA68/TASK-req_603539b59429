@@ -29,7 +29,7 @@ public class BehaviorEvent {
     private Product product;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "event_type", nullable = false)
+    @Column(name = "event_type", nullable = false, columnDefinition = "varchar(20)")
     private EventType eventType;
 
     @Builder.Default

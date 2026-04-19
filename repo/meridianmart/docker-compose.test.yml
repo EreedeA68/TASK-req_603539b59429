@@ -38,6 +38,7 @@ services:
       AES_KEY: TestAES256KeyMustBe32BytesLongXX
       REQUEST_SIGNING_SECRET: TestRequestSigningSecretForTests1
       APP_PORT: 8080
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
     depends_on:
       db-test:
         condition: service_healthy

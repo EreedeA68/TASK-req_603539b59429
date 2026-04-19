@@ -1,0 +1,47 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL;NON_KEYWORDS=USER,VALUE,ORDER
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: false
+  h2:
+    console:
+      enabled: false
+  scheduling:
+    enabled: false
+
+app:
+  jwt:
+    secret: testSecretKeyForUnitTestingOnlyDoNotUseInProduction1234567890
+    expiration-ms: 86400000
+  aes:
+    key: TestAES256KeyMustBe32BytesLongXX
+  rate-limit:
+    requests-per-minute: 1000
+  brute-force:
+    max-attempts: 5
+    lock-duration-minutes: 15
+  recommendations:
+    ttl-minutes: 60
+    min-shared-interactions: 3
+    top-n: 10
+    cold-start-days: 30
+  notifications:
+    max-per-day: 5
+  request-signing:
+    secret: TestRequestSigningSecretForTests1
+    max-age-seconds: 300
+
+logging:
+  level:
+    com.meridianmart: WARN
+    org.springframework: WARN
+    org.hibernate: WARN

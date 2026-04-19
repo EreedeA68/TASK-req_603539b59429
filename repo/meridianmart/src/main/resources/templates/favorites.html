@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeridianMart - Favorites</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<nav class="navbar">
+    <a class="navbar-brand" href="/home">MeridianMart</a>
+    <ul class="navbar-nav">
+        <li><a href="/home">Catalog</a></li>
+        <li><a href="/cart">Cart</a></li>
+        <li><a href="/notifications">Notifications <span class="badge" id="notif-badge"></span></a></li>
+        <li><button class="logout-btn">Logout</button></li>
+    </ul>
+</nav>
+
+<div class="container" id="favorites-page">
+    <div class="page-title">My Favorites</div>
+    <div id="favorites-grid" class="product-grid">
+        <div class="loading" style="display:block"><div class="spinner"></div></div>
+    </div>
+</div>
+
+<script src="/js/app.js"></script>
+<script>
+if (document.getElementById('favorites-page')) {
+    if (!API.token) window.location.href = '/login';
+    loadUnreadCount();
+    (async () => {
+        const res = await API.get('/api/favorites');
+        const grid = document.getElementById('favorites-grid');
+        if (!res.data || !res.data.data || res.data.data.length === 0) {
+            grid.innerHTML = '<div class="empty-state"><p>No favorites yet.</p></div>';
+            return;
+        }
+        grid.innerHTML = res.data.data.map(f => `
+            <div class="product-card" onclick="window.location='/products/${f.productId}'">
+                <img src="${f.imageUrl || '/images/placeholder.svg'}" alt="${f.productName}" onerror="this.src='/images/placeholder.svg'">
+                <div class="product-card-body">
+                    <div class="product-card-title">${f.productName}</div>
+                    <div class="product-card-price">${formatPrice(f.price)}</div>
+                    <button class="btn btn-danger btn-sm" style="margin-top:0.5rem" onclick="event.stopPropagation();removeFav(${f.id})">Remove</button>
+                </div>
+            </div>
+        `).join('');
+    })();
+
+    window.removeFav = async (id) => {
+        await API.delete('/api/favorites/' + id);
+        window.location.reload();
+    };
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: meridianmart-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_pass}
+      MYSQL_DATABASE: ${DB_NAME:-meridianmart}
+      MYSQL_USER: ${DB_USER:-meridian}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-meridian_pass}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${DB_USER:-meridian}", "-p${DB_PASSWORD:-meridian_pass}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - meridianmart-net
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: meridianmart-app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-meridianmart}
+      DB_USER: ${DB_USER:-meridian}
+      DB_PASSWORD: ${DB_PASSWORD:-meridian_pass}
+      JWT_SECRET: ${JWT_SECRET}
+      AES_KEY: ${AES_KEY}
+      APP_PORT: 8080
+      SPRING_PROFILES_ACTIVE: default
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - backup_data:/backup
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    networks:
+      - meridianmart-net
+
+volumes:
+  mysql_data:
+    name: meridianmart_mysql_data
+  backup_data:
+    name: meridianmart_backups
+
+networks:
+  meridianmart-net:
+    name: meridianmart-network
+    driver: bridge

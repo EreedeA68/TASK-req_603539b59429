@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MeridianMart - Order Confirmed</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<nav class="navbar no-print">
+    <a class="navbar-brand" href="/home">MeridianMart</a>
+    <ul class="navbar-nav">
+        <li><a href="/home">Home</a></li>
+        <li><a href="/orders">Orders</a></li>
+    </ul>
+</nav>
+
+<div class="container" id="confirmation-page">
+    <div style="max-width:500px;margin:3rem auto;text-align:center">
+        <div style="font-size:3rem;margin-bottom:1rem">✓</div>
+        <h1 style="font-size:1.8rem;color:var(--success);margin-bottom:0.5rem">Order Confirmed!</h1>
+        <p style="color:var(--text-muted);margin-bottom:2rem">
+            Thank you for your purchase. Your order has been placed successfully.
+        </p>
+
+        <div class="receipt-box" id="printable-receipt">
+            <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem">Receipt Number</div>
+            <div class="receipt-number" id="receipt-number">—</div>
+            <div class="receipt-timestamp" id="receipt-timestamp"></div>
+            <hr style="margin:1rem 0;border-color:var(--border)">
+            <div style="font-size:0.85rem;color:var(--text-muted)">MeridianMart Offline Commerce</div>
+        </div>
+
+        <div style="display:flex;gap:1rem;justify-content:center;margin-top:2rem" class="no-print">
+            <a href="/home" class="btn btn-primary">Continue Shopping</a>
+            <button class="btn btn-outline" onclick="window.print()">Print Receipt</button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+version: '3.9'
+
+services:
+  db-test:
+    image: mysql:8.0
+    container_name: meridianmart-db-test
+    environment:
+      MYSQL_ROOT_PASSWORD: root_test
+      MYSQL_DATABASE: meridianmart_test
+      MYSQL_USER: meridian_test
+      MYSQL_PASSWORD: meridian_test_pass
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "meridian_test", "-pmeridian_test_pass"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - meridianmart-test-net
+
+  app-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: tester
+    container_name: meridianmart-app-test
+    ports:
+      - "8081:8080"
+    environment:
+      DB_HOST: db-test
+      DB_PORT: 3306
+      DB_NAME: meridianmart_test
+      DB_USER: meridian_test
+      DB_PASSWORD: meridian_test_pass
+      JWT_SECRET: testSecretKeyForUnitTestingOnlyDoNotUseInProduction1234567890
+      AES_KEY: TestAES256KeyMustBe32BytesLongXX
+      APP_PORT: 8080
+      SPRING_PROFILES_ACTIVE: test
+    depends_on:
+      db-test:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 15s
+      timeout: 10s
+      retries: 8
+      start_period: 90s
+    networks:
+      - meridianmart-test-net
+
+networks:
+  meridianmart-test-net:
+    name: meridianmart-test-network
+    driver: bridge

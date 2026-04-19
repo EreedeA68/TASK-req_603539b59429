@@ -43,7 +43,9 @@ public class SecurityConfig {
                 .requestMatchers("/actuator/**").hasRole("ADMIN")
                 .requestMatchers("/", "/login", "/error").permitAll()
                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
-                .requestMatchers("/home", "/products/**").authenticated()
+                .requestMatchers("/home", "/products/**", "/cart", "/checkout",
+                        "/confirmation", "/orders", "/notifications", "/favorites",
+                        "/staff/**", "/admin/**").permitAll()
                 .requestMatchers("/api/products", "/api/products/**").hasAnyRole("SHOPPER", "STAFF", "ADMIN", "READ_ONLY")
                 .requestMatchers("/api/cart/**").hasRole("SHOPPER")
                 .requestMatchers("/api/favorites/**").hasRole("SHOPPER")
@@ -63,8 +65,6 @@ public class SecurityConfig {
                 .requestMatchers("/api/config/**").hasRole("ADMIN")
                 .requestMatchers("/api/auth/me").authenticated()
                 .requestMatchers("/api/auth/logout").authenticated()
-                .requestMatchers("/staff/**").hasAnyRole("STAFF", "ADMIN")
-                .requestMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

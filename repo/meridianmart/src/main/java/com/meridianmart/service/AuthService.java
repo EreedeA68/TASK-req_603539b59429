@@ -38,7 +38,7 @@ public class AuthService {
     @Value("${app.request-signing.secret:${app.jwt.secret}}")
     private String signingSecret;
 
-    @Transactional
+    @Transactional(noRollbackFor = ResponseStatusException.class)
     public LoginResponse login(LoginRequest request, String ipAddress) {
         String identifier = request.getUsername();
         User user = (identifier.contains("@")

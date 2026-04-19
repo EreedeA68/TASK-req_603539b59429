@@ -75,7 +75,7 @@ class RecommendationServiceTest {
                 List.of(new Object[]{1L, 10L}, new Object[]{2L, 8L}));
         when(productRepository.findByIdInAndStoreId(any(), eq(STORE))).thenReturn(List.of(buildProduct(1L), buildProduct(2L)));
         when(productRepository.findNewArrivalsByStoreId(eq(STORE), any())).thenReturn(List.of(buildProduct(3L)));
-        when(recommendationRepository.deleteByUserId(1L)).then(inv -> null);
+        doNothing().when(recommendationRepository).deleteByUserId(1L);
         when(recommendationRepository.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
         when(productService.toDto(any())).thenAnswer(inv -> {
             Product p = inv.getArgument(0);
@@ -98,7 +98,7 @@ class RecommendationServiceTest {
         when(behaviorEventRepository.findProductPopularitySinceByStoreId(any(), eq(STORE))).thenReturn(List.of());
         when(productRepository.findByIdInAndStoreId(any(), eq(STORE))).thenReturn(List.of());
         when(productRepository.findNewArrivalsByStoreId(eq(STORE), any())).thenReturn(List.of(buildProduct(100L)));
-        when(recommendationRepository.deleteByUserId(1L)).then(inv -> null);
+        doNothing().when(recommendationRepository).deleteByUserId(1L);
         when(recommendationRepository.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
         when(productService.toDto(any())).thenAnswer(inv -> {
             Product p = inv.getArgument(0);
@@ -154,7 +154,7 @@ class RecommendationServiceTest {
         when(behaviorEventRepository.findProductPopularitySinceByStoreId(any(), eq(STORE))).thenReturn(List.of());
         when(productRepository.findByIdInAndStoreId(any(), eq(STORE))).thenReturn(List.of());
         when(productRepository.findNewArrivalsByStoreId(eq(STORE), any())).thenReturn(List.of(buildProduct(99L)));
-        when(recommendationRepository.deleteByUserId(1L)).then(inv -> null);
+        doNothing().when(recommendationRepository).deleteByUserId(1L);
         when(recommendationRepository.saveAll(any())).thenAnswer(inv -> inv.getArgument(0));
         when(productService.toDto(any())).thenAnswer(inv -> {
             Product p = inv.getArgument(0);

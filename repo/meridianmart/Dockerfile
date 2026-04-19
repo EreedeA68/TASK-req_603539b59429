@@ -8,13 +8,22 @@ RUN apt-get update && apt-get install -y maven && mvn package -DskipTests -q
 
 # Test stage: extends builder with headless Chrome, curl, and Node.js (for JS unit tests)
 FROM builder AS tester
-RUN apt-get update && apt-get install -y \
-    chromium \
-    chromium-driver \
-    curl \
-    nodejs \
-    npm \
-    && rm -rf /var/lib/apt/lists/*
+# Install google-chrome-stable (real .deb) — ubuntu 22.04's 'chromium' is a snap stub that
+# cannot run inside Docker. Then pre-download the matching chromedriver so tests need no
+# network access at runtime.
+RUN apt-get update && apt-get install -y curl wget gnupg unzip nodejs npm \
+    && wget -q -O - https://dl.google.com/linux/linux_signing_key.pub \
+       | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" \
+       > /etc/apt/sources.list.d/google-chrome.list \
+    && apt-get update && apt-get install -y google-chrome-stable \
+    && CHROME_MAJOR=$(google-chrome --version | grep -oP '\d+' | head -1) \
+    && DRIVER_VER=$(curl -fsSL "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_MAJOR}") \
+    && wget -q "https://storage.googleapis.com/chrome-for-testing-public/${DRIVER_VER}/linux64/chromedriver-linux64.zip" -O /tmp/cd.zip \
+    && unzip /tmp/cd.zip -d /tmp \
+    && mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver \
+    && chmod +x /usr/local/bin/chromedriver \
+    && rm -rf /tmp/cd.zip /tmp/chromedriver-linux64 /var/lib/apt/lists/*
 COPY package*.json ./
 RUN npm install
 EXPOSE 8080

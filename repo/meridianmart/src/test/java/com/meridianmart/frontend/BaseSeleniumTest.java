@@ -30,7 +30,12 @@ public abstract class BaseSeleniumTest {
 
     @BeforeAll
     static void setUpDriver() {
-        WebDriverManager.chromedriver().setup();
+        // Use the pre-installed chromedriver in Docker; fall back to WebDriverManager locally
+        if (new java.io.File("/usr/local/bin/chromedriver").exists()) {
+            System.setProperty("webdriver.chrome.driver", "/usr/local/bin/chromedriver");
+        } else {
+            WebDriverManager.chromedriver().setup();
+        }
     }
 
     @BeforeEach

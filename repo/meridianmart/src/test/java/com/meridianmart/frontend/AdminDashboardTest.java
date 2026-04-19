@@ -21,8 +21,7 @@ class AdminDashboardTest extends BaseSeleniumTest {
 
     @BeforeEach
     void setUp() {
-        featureFlagRepository.deleteAll();
-        userRepository.deleteAll();
+        cleanDatabase();
 
         userRepository.save(User.builder()
                 .username("adminui").email("admin@test.com")

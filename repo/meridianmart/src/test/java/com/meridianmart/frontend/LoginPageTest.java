@@ -19,7 +19,7 @@ class LoginPageTest extends BaseSeleniumTest {
 
     @BeforeEach
     void setUpUser() {
-        userRepository.deleteAll();
+        cleanDatabase();
         userRepository.save(User.builder()
                 .username("testlogin").email("login@test.com")
                 .passwordHash(passwordEncoder.encode("Password123!"))

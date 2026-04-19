@@ -27,11 +27,7 @@ class CheckoutPageTest extends BaseSeleniumTest {
 
     @BeforeEach
     void setUp() {
-        paymentTransactionRepository.deleteAll();
-        orderRepository.deleteAll();
-        cartItemRepository.deleteAll();
-        productRepository.deleteAll();
-        userRepository.deleteAll();
+        cleanDatabase();
 
         userRepository.save(User.builder()
                 .username("checkouttest").email("checkout@test.com")

@@ -20,7 +20,7 @@ class ConfirmationPageTest extends BaseSeleniumTest {
 
     @BeforeEach
     void setUp() {
-        userRepository.deleteAll();
+        cleanDatabase();
         userRepository.save(User.builder()
                 .username("confirmtest").email("confirm@test.com")
                 .passwordHash(passwordEncoder.encode("Password123!"))

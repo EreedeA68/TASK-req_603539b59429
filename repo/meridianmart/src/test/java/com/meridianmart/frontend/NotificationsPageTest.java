@@ -21,8 +21,7 @@ class NotificationsPageTest extends BaseSeleniumTest {
 
     @BeforeEach
     void setUp() {
-        notificationRepository.deleteAll();
-        userRepository.deleteAll();
+        cleanDatabase();
 
         User shopper = userRepository.save(User.builder()
                 .username("notiftest").email("notif@test.com")

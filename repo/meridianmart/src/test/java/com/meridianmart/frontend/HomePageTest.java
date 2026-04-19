@@ -23,8 +23,7 @@ class HomePageTest extends BaseSeleniumTest {
 
     @BeforeEach
     void setUp() {
-        productRepository.deleteAll();
-        userRepository.deleteAll();
+        cleanDatabase();
 
         userRepository.save(User.builder()
                 .username("hometest").email("home@test.com")

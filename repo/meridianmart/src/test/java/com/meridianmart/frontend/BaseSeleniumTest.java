@@ -12,11 +12,15 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -24,6 +28,9 @@ public abstract class BaseSeleniumTest {
 
     @LocalServerPort
     protected int port;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     protected WebDriver driver;
     protected WebDriverWait wait;
@@ -50,6 +57,19 @@ public abstract class BaseSeleniumTest {
     @AfterEach
     void tearDown() {
         if (driver != null) driver.quit();
+    }
+
+    // Clears all tables safely regardless of FK order — H2 only.
+    protected void cleanDatabase() {
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+        List<String> tables = Arrays.asList(
+                "behavior_events", "recommendations", "cart_items", "favorites",
+                "order_items", "orders", "payment_transactions", "disputes",
+                "notifications", "ratings", "revoked_tokens", "nonce_store",
+                "change_history", "audit_logs", "feature_flags", "app_config",
+                "distributed_locks", "products", "users");
+        tables.forEach(t -> jdbcTemplate.execute("DELETE FROM " + t));
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
     }
 
     protected String baseUrl() {

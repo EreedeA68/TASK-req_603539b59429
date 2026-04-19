@@ -26,8 +26,7 @@ class ProductPageTest extends BaseSeleniumTest {
 
     @BeforeEach
     void setUp() {
-        productRepository.deleteAll();
-        userRepository.deleteAll();
+        cleanDatabase();
 
         userRepository.save(User.builder()
                 .username("prodtest").email("prod@test.com")

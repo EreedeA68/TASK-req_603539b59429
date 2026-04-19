@@ -25,8 +25,7 @@ class CartPageTest extends BaseSeleniumTest {
 
     @BeforeEach
     void setUp() {
-        productRepository.deleteAll();
-        userRepository.deleteAll();
+        cleanDatabase();
 
         userRepository.save(User.builder()
                 .username("carttest").email("cart@test.com")

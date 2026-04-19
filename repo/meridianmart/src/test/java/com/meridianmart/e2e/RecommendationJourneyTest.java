@@ -31,9 +31,7 @@ class RecommendationJourneyTest extends BaseSeleniumTest {
 
     @BeforeEach
     void setUp() {
-        featureFlagRepository.deleteAll();
-        productRepository.deleteAll();
-        userRepository.deleteAll();
+        cleanDatabase();
 
         userRepository.save(User.builder()
                 .username("recjourney").email("rec@test.com")

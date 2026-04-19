@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   db:
     image: mysql:8.0
@@ -32,18 +30,16 @@ services:
     restart: unless-stopped
     ports:
       - "${APP_PORT:-8080}:8080"
-    env_file:
-      - ./meridianmart/.env
     environment:
       DB_HOST: db
       DB_PORT: 3306
       DB_NAME: ${DB_NAME:-meridianmart}
       DB_USER: ${DB_USER:-meridian}
       DB_PASSWORD: ${DB_PASSWORD:-meridian_pass}
-      JWT_SECRET: ${JWT_SECRET}
-      AES_KEY: ${AES_KEY}
+      JWT_SECRET: ${JWT_SECRET:-DefaultJwtSecretForDemoOnlyChangeInProduction1234}
+      AES_KEY: ${AES_KEY:-DefaultAES256KeyForDemo32BytesXX}
+      REQUEST_SIGNING_SECRET: ${REQUEST_SIGNING_SECRET:-DefaultRequestSigningSecret12345}
       APP_PORT: 8080
-      SPRING_PROFILES_ACTIVE: default
     depends_on:
       db:
         condition: service_healthy

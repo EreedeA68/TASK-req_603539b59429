@@ -84,8 +84,8 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.login(req, "127.0.0.1"))
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("statusCode")
-                .satisfies(code -> assertThat(code.value()).isEqualTo(401));
+                .extracting("statusCode.value")
+                .isEqualTo(401);
 
         verify(userRepository).save(argThat(u -> u.getFailedAttempts() == 1));
     }
@@ -104,8 +104,8 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.login(req, "127.0.0.1"))
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("statusCode")
-                .satisfies(code -> assertThat(code.value()).isEqualTo(423));
+                .extracting("statusCode.value")
+                .isEqualTo(423);
 
         verify(userRepository).save(argThat(u -> u.isLocked() && u.getLockTime() != null));
         verify(auditService).log(eq(1L), eq("ACCOUNT_LOCKED"), anyString(), eq("127.0.0.1"));
@@ -124,8 +124,8 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.login(req, "127.0.0.1"))
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("statusCode")
-                .satisfies(code -> assertThat(code.value()).isEqualTo(423));
+                .extracting("statusCode.value")
+                .isEqualTo(423);
     }
 
     @Test
@@ -162,7 +162,7 @@ class AuthServiceTest {
 
         assertThatThrownBy(() -> authService.login(req, "127.0.0.1"))
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("statusCode")
-                .satisfies(code -> assertThat(code.value()).isEqualTo(401));
+                .extracting("statusCode.value")
+                .isEqualTo(401);
     }
 }

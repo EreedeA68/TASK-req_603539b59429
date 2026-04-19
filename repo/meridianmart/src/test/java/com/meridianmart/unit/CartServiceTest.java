@@ -97,8 +97,8 @@ class CartServiceTest {
 
         assertThatThrownBy(() -> cartService.removeFromCart(user, 999L))
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("statusCode")
-                .satisfies(code -> assertThat(code.value()).isEqualTo(404));
+                .extracting("statusCode.value")
+                .isEqualTo(404);
     }
 
     @Test
@@ -129,7 +129,7 @@ class CartServiceTest {
 
         assertThatThrownBy(() -> cartService.addToCart(user, req))
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("statusCode")
-                .satisfies(code -> assertThat(code.value()).isEqualTo(400));
+                .extracting("statusCode.value")
+                .isEqualTo(400);
     }
 }

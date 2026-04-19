@@ -128,8 +128,8 @@ class PaymentServiceTest {
 
         assertThatThrownBy(() -> paymentService.recordPayment(order, BigDecimal.valueOf(100), "in-flight-key"))
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("statusCode")
-                .satisfies(code -> assertThat(code.value()).isEqualTo(503));
+                .extracting("statusCode.value")
+                .isEqualTo(503);
     }
 
     @Test
@@ -141,8 +141,8 @@ class PaymentServiceTest {
 
         assertThatThrownBy(() -> paymentService.processRefund(order, "refund-x", 1L, "127.0.0.1"))
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("statusCode")
-                .satisfies(code -> assertThat(code.value()).isEqualTo(400));
+                .extracting("statusCode.value")
+                .isEqualTo(400);
     }
 
     @Test

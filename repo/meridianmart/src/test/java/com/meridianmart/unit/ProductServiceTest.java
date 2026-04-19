@@ -98,8 +98,8 @@ class ProductServiceTest {
 
         assertThatThrownBy(() -> productService.getProductById(99999L, STORE))
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("statusCode")
-                .satisfies(code -> assertThat(code.value()).isEqualTo(404));
+                .extracting("statusCode.value")
+                .isEqualTo(404);
     }
 
     @Test
@@ -119,7 +119,7 @@ class ProductServiceTest {
 
         assertThatThrownBy(() -> productService.decrementStock(1L, 5))
                 .isInstanceOf(ResponseStatusException.class)
-                .extracting("statusCode")
-                .satisfies(code -> assertThat(code.value()).isEqualTo(400));
+                .extracting("statusCode.value")
+                .isEqualTo(400);
     }
 }

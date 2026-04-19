@@ -28,9 +28,7 @@ class StaffJourneyTest extends BaseSeleniumTest {
 
     @BeforeEach
     void setUp() {
-        paymentTransactionRepository.deleteAll();
-        orderRepository.deleteAll();
-        userRepository.deleteAll();
+        cleanDatabase();
 
         User shopper = userRepository.save(User.builder()
                 .username("staffjourney_shopper").email("staffshopper@test.com")

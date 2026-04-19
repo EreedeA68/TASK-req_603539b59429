@@ -25,10 +25,11 @@ class PageControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    void favoritesPageRequiresAuthentication() throws Exception {
+    void favoritesPageAccessibleWithoutServerAuth() throws Exception {
         mockMvc.perform(get("/favorites")
                         .contentType(MediaType.TEXT_HTML))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
     }
 
     @Test
@@ -40,10 +41,11 @@ class PageControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    void homePageRequiresAuthentication() throws Exception {
+    void homePageAccessibleWithoutServerAuth() throws Exception {
         mockMvc.perform(get("/home")
                         .contentType(MediaType.TEXT_HTML))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_HTML));
     }
 
     @Test

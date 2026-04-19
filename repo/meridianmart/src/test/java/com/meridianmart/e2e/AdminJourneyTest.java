@@ -8,6 +8,7 @@ import com.meridianmart.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,11 +48,11 @@ class AdminJourneyTest extends BaseSeleniumTest {
         // Step 3: Verify flags list renders
         assertThat(driver.getPageSource()).contains("JOURNEY_TEST_FLAG");
 
-        // Step 4: Find the toggle and turn it off
-        WebElement toggle = wait.until(ExpectedConditions.elementToBeClickable(
+        // Step 4: Find the toggle and turn it off (checkbox is CSS-hidden; use JS click)
+        WebElement toggle = wait.until(ExpectedConditions.presenceOfElementLocated(
                 By.cssSelector("#flags-list input[type='checkbox']")));
         boolean initiallyChecked = toggle.isSelected();
-        toggle.click();
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", toggle);
 
         try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
 
@@ -63,8 +64,8 @@ class AdminJourneyTest extends BaseSeleniumTest {
                 By.cssSelector("#flags-list input[type='checkbox']")));
         assertThat(updatedToggle.isSelected()).isNotEqualTo(initiallyChecked);
 
-        // Step 6: Toggle back on
-        updatedToggle.click();
+        // Step 6: Toggle back on (CSS-hidden; use JS click)
+        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", updatedToggle);
         try { Thread.sleep(2000); } catch (InterruptedException ignored) {}
 
         navigateTo("/admin/dashboard");

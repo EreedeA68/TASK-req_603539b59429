@@ -578,7 +578,7 @@ if (document.getElementById('admin-dashboard')) {
                 <td>${f.storeId || '-'}</td>
                 <td>
                     <label class="toggle-switch">
-                        <input type="checkbox" ${f.isEnabled ? 'checked' : ''} onchange="toggleFlag(${f.id}, this.checked)">
+                        <input type="checkbox" ${f.enabled ? 'checked' : ''} onchange="toggleFlag(${f.id}, this.checked)">
                         <span class="toggle-slider"></span>
                     </label>
                 </td>

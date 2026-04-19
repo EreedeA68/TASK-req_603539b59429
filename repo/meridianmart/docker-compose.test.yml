@@ -9,6 +9,8 @@ services:
       MYSQL_DATABASE: meridianmart_test
       MYSQL_USER: meridian_test
       MYSQL_PASSWORD: meridian_test_pass
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "meridian_test", "-pmeridian_test_pass"]
       interval: 10s
